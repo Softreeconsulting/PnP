@@ -1,0 +1,31 @@
+- In the above piece of code "My list" is SP list title and "Title", "Id", "CustomField_1", "CustomField_2" are list field/column internal names.
+Accordingly you can change these values on your end.
+
+
+
+export default class HelloWorldApplicationCustomizer
+  extends BaseApplicationCustomizer<IHelloWorldApplicationCustomizerProperties> {
+
+  @override
+  public onInit(): Promise<void> {
+    pnp.setup({
+      spfxContext: this.context
+    });
+
+    pnp.sp.web.lists.getByTitle("My List").items.select("Title", "Id", "CustomField_1", "CustomField_2").getPaged().then(p => {
+                
+          console.log(JSON.stringify(p.results, null, 4));
+          var itemColl = p.results;
+          for (var index = 0; index < itemColl.length; index++) {
+            var element = itemColl[index];
+            var title = element["Title"];
+            var id = element["Id"];
+            var customFldValue1 = element["CustomField_1"];
+            var customFldValue2 = element["CustomField_2"];
+            console.log("Item with Id: " + id + " and title: " + title + " has CustomField1 value: " + customFldValue1 + " and CustomField2 value: " + customFldValue2);
+          }
+    });
+
+    return Promise.resolve();
+  }
+}
